@@ -4,6 +4,12 @@ import math
 import bike
 import time
 
+POWER = 150
+UPDATE_FRAME_COUNT = 10
+currentSpeed = 0 
+prevTime = 0
+lastTime = None
+
 nintaco.initRemoteAPI("localhost", 9999)
 api = nintaco.getAPI()
 
@@ -38,32 +44,48 @@ def getWeight():
     return api.getRacerMateData(0,nintaco.RacerMateWeight)
 
 def update():
-    setPower(power)
+    global lastTime,currentSpeed
     setHeart(121)
     setCadence(67)
-    setSpeed(bike.calculateSpeedMPH(getGrade(),getWind(),getWeight(),power))
+    setPower(POWER)
+    t = time.time()
+    if lastTime is not None:
+        currentSpeed = bike.updateSpeedMPH(getGrade(),getWind(),getWeight(),POWER,currentSpeed,t-lastTime)
+        setSpeed(currentSpeed)
+    lastTime = t
+    
+def reset():
+    global startTime,frameCount,lastTime,currentSpeed
+    startTime = time.time()
+    frameCount = 0
+    api.setRacerMateData(0,nintaco.RacerMateRemoteControl,1)
+    currentSpeed = 0
+    setSpeed(currentSpeed)
+    setCadence(67)
+    setHeart(121)
+    setPower(POWER)
+    api.setRacerMateData(0,nintaco.RacerMateNewRace,0)
+    lastTime = None
+    update()    
         
 def Frame():
     global frameCount
     frameCount += 1
     if frameCount % 60 == 0:
         print("fps",frameCount/(time.time()-startTime))
-    if frameCount % 10 == 0:
+        print("speed",currentSpeed)
+        print("wind",getWind())
+    if api.getRacerMateData(0, nintaco.RacerMateNewRace):
+        print("new race")
+        reset()
+    elif frameCount % UPDATE_FRAME_COUNT == 0 or (frameCount < 60 and frameCount % 2 == 0):
         update()
         
 def Start():
-    global startTime,frameCount
-    startTime = time.time()
-    frameCount = 0
-    api.setRacerMateData(0,nintaco.RacerMateRemoteControl,1)
     print("Connected")
+    reset()
                 
-setSpeed(12.5)
-setCadence(67)
-setHeart(121)
-setPower(227)
 api.addActivateListener(Start)
 api.addFrameListener(Frame)
-
 
 api.run()

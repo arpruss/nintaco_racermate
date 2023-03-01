@@ -87,6 +87,7 @@ RacerMatePulse = 4
 RacerMateRPM = 5
 RacerMateSpeed = 6
 RacerMateRemoteControl = 7
+RacerMateNewRace = 8
 
 _Activate = 1
 _Deactivate = 3

@@ -27,14 +27,15 @@ public class RacerMateMapper extends DeviceMapper implements Serializable {
   
   private static final float WATTS_SCALE = 1000f / 140f;
   
-  public static final int DATA_GRADE = 0;
-  public static final int DATA_WIND = 1;
-  public static final int DATA_WEIGHT = 2;
-  public static final int DATA_POWER = 3;
-  public static final int DATA_PULSE = 4;
-  public static final int DATA_RPM = 5;
-  public static final int DATA_SPEED = 6;
-  public static final int DATA_REMOTE_CONTROL = 7;
+  public static final int API_GRADE = 0;
+  public static final int API_WIND = 1;
+  public static final int API_WEIGHT = 2;
+  public static final int API_POWER = 3;
+  public static final int API_PULSE = 4;
+  public static final int API_RPM = 5;
+  public static final int API_SPEED = 6;
+  public static final int API_REMOTE_CONTROL = 7;
+  public static final int API_NEW_RACE = 8;
   
   private final int shift;
   private final int portIndex;
@@ -55,6 +56,7 @@ public class RacerMateMapper extends DeviceMapper implements Serializable {
   private int remotePower;
   private int remotePulse;
   private int remoteRPM;
+  private boolean newRace = false;
   
   private int pedalTimer = (int)MAX_PEDAL_TIME;
   private float averagePedalTime = MAX_PEDAL_TIME;
@@ -92,17 +94,22 @@ public class RacerMateMapper extends DeviceMapper implements Serializable {
       case 5: // Pulse Target Max (0 to 220)
         data -= 0x800;
         break;
+      case 15: // New race
+        newRace = true;
+        break;
     }
   }
   
   public int getData(int index) {
       switch(index) {
-          case DATA_GRADE:
+          case API_GRADE:
             return grade;
-          case DATA_WIND:
+          case API_WIND:
             return wind;
-          case DATA_WEIGHT:
+          case API_WEIGHT:
             return weight;
+          case API_NEW_RACE:
+            return newRace ? 1 : 0;
           default:
             return -1;
       }
@@ -110,21 +117,23 @@ public class RacerMateMapper extends DeviceMapper implements Serializable {
   
   public void setData(int index, int data) {
       switch(index) {
-          case DATA_SPEED:
+          case API_SPEED:
             remoteSpeed = data;
             break;
-          case DATA_POWER:
+          case API_POWER:
             remotePower = data;
             break;
-          case DATA_PULSE:
+          case API_PULSE:
             remotePulse = data;
             break;
-          case DATA_RPM:
+          case API_RPM:
             remoteRPM = data;
             break;
-          case DATA_REMOTE_CONTROL:
+          case API_REMOTE_CONTROL:
             remoteControl = data != 0;
             break;
+          case API_NEW_RACE:
+            newRace = data != 0;
       }
       return;
   }
