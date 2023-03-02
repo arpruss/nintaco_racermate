@@ -3,7 +3,7 @@ import struct
 import logging
 import math
 import threading
-import racermatefast
+import racermate
 import time
 
 from bleak import BleakClient,BleakScanner
@@ -43,11 +43,11 @@ def bike_handler(sender,data):
         flags = struct.unpack("H",data[:2])[0]
         parsed = parseData(flags^BIKE_REVERSE_FLAG_BITS,data[2:],BIKE_DATA_FIELDS)
         if "cadence" in parsed:
-            racermatefast.setCadence(struct.unpack("H",parsed["cadence"])[0])
+            racermate.setCadence(struct.unpack("H",parsed["cadence"])[0])
         if "power" in parsed:
-            racermatefast.setPower(struct.unpack("H",parsed["power"])[0])
+            racermate.setPower(struct.unpack("H",parsed["power"])[0])
         if "heartRate" in parsed:
-            racermatefast.setHeart(struct.unpack("B",parsed["heartRate"])[0])
+            racermate.setHeart(struct.unpack("B",parsed["heartRate"])[0])
     except:
         pass
 
@@ -84,11 +84,11 @@ async def scan(debug=False):
         await run(foundDevice)
 
 if __name__ == "__main__":
-    racermatefast.racerMateInit()
-    racermatefast.setPower(0)
-    racermatefast.setCadence(0)
-    racermatefast.setHeart(0)
-    t = threading.Thread(target=racermatefast.racerMateGo)
+    racermate.racerMateInit()
+    racermate.setPower(0)
+    racermate.setCadence(0)
+    racermate.setHeart(0)
+    t = threading.Thread(target=racermate.racerMateGo)
     t.start()
     loop = asyncio.get_event_loop()
     loop.run_until_complete(scan(debug=True))

@@ -10,7 +10,8 @@ POWER_TIMEOUT = 7
 currentSpeed = 0 
 prevTime = 0
 lastNonZeroPower = time.time()
-lastTime = None
+lastUpdateTime = None
+toSet = {}
 
 def clamp(low,high,x):
     return min(max(x,low),high)
@@ -18,19 +19,25 @@ def clamp(low,high,x):
 def setSpeed(v):
     global currentSpeed
     s = math.floor(v*50+0.5)
-    api.setRacerMateData(0, nintaco.RacerMateSpeed, s)
+    toSet[nintaco.RacerMateSpeed] = s
     currentSpeed = v    
     
 def setHeart(h):
-    api.setRacerMateData(0, nintaco.RacerMatePulse, clamp(0,0xFF,h))
+    toSet[nintaco.RacerMatePulse] = clamp(0,0xFF,h)
     
 def setCadence(rpm):
-    api.setRacerMateData(0, nintaco.RacerMateRPM, clamp(0,0x7FF,rpm))
+    toSet[nintaco.RacerMateRPM] = clamp(0,0x7FF,rpm)
     
 def setPower(_power):
     global power
     power = _power
-    api.setRacerMateData(0, nintaco.RacerMatePower, math.floor(_power / 3054 * 0xFFF + 0.5))
+    toSet[nintaco.RacerMatePower] = math.floor(_power / 3054 * 0xFFF + 0.5)
+    
+def applySettings():
+    s = toSet.copy()
+    toSet.clear()
+    for k in s:
+        api.setRacerMateData(0, k, s[k])
 
 # percent
 def getGrade():
@@ -45,7 +52,7 @@ def getWeight():
     return api.getRacerMateData(0,nintaco.RacerMateWeight)
 
 def update():
-    global lastTime,currentSpeed,lastNonZeroPower
+    global lastUpdateTime,currentSpeed,lastNonZeroPower
     if power == 0:
         if time.time() - lastNonZeroPower > POWER_TIMEOUT:
             currentSpeed = 0
@@ -54,13 +61,13 @@ def update():
         
     setPower(power)
     t = time.time()
-    if lastTime is not None:
-        currentSpeed = bike.updateSpeedMPH(getGrade(),getWind(),getWeight(),power,currentSpeed,t-lastTime)
+    if lastUpdateTime is not None:
+        currentSpeed = bike.updateSpeedMPH(getGrade(),getWind(),getWeight(),power,currentSpeed,t-lastUpdateTime)
         setSpeed(currentSpeed)
-    lastTime = t
+    lastUpdateTime = t
     
 def reset():
-    global startTime,frameCount,lastTime
+    global startTime,frameCount,lastUpdateTime
     startTime = time.time()
     frameCount = 0
     api.setRacerMateData(0,nintaco.RacerMateRemoteControl,1)
@@ -69,9 +76,9 @@ def reset():
     setHeart(0)
     setCadence(0)
     api.setRacerMateData(0,nintaco.RacerMateNewRace,0)
-    lastTime = None
-    print("speed",currentSpeed)
+    lastUpdateTime = None
     update()    
+    applySettings()
         
 def Frame():
     global frameCount,currentSpeed
@@ -83,11 +90,13 @@ def Frame():
         print("new race")
         #currentSpeed = 0 # TODO
         reset()
-    elif frameCount % UPDATE_FRAME_COUNT == 0 or (frameCount < 60 and frameCount % 2 == 0):
-        update()
+    else:
+        if frameCount % UPDATE_FRAME_COUNT == 0 or (frameCount < 60 and frameCount % 2 == 0):
+            update()
+        applySettings()
         
 def Start():
-    print("Connected")
+    print("Connected to Nintaco")
     reset()
 
 def racerMateInit():
@@ -98,9 +107,7 @@ def racerMateInit():
 def racerMateGo():
     api.addActivateListener(Start)
     api.addFrameListener(Frame)
-
     api.run()
-    print("exit run")
 
 if __name__ == '__main__':
     racerMateInit()
