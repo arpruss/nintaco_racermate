@@ -34,7 +34,7 @@ def updateSpeedMPH(_grade,_wind,_weight,power,_speed,dt):
     else:
         F_forward = P_wheel / speed
     speed = speed + (F_forward - F_resist) * dt / mass
-    return speed / MPH_TO_MS
+    return max(0, speed / MPH_TO_MS)
 
 # https://www.gribble.org/cycling/power_v_speed.html
 def calculateSpeedMPH(_grade,_wind,_weight,_power):

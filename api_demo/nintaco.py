@@ -107,7 +107,7 @@ _EVENT_REQUEST = 0xFF
 _EVENT_RESPONSE = 0xFE
 _HEARTBEAT = 0xFD
 _READY = 0xFC
-_RETRY_SECONDS = 1
+_RETRY_SECONDS = 0.25
 
 _BLOCK_SIZE = 4096
 _ARRAY_LENGTH = 1024
@@ -118,8 +118,6 @@ _remoteAPI = None
 
 def signedInt(x):
   if x & 0x80000000:
-#    print("%0x"%x)
-#    print(-(x^0xFFFFFFFF)-1)
     return -(x^0xFFFFFFFF)-1
   else:
     return x
@@ -342,6 +340,11 @@ class _RemoteBase(object):
           self._fireStatusChanged("Disconnected.")
         finally:
           self._stream = None
+      try:
+        if sock is not None:
+          sock.close()
+      except:
+        pass
       time.sleep(_RETRY_SECONDS)   
       
   def _fireDeactivated(self):

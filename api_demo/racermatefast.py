@@ -4,14 +4,11 @@ import math
 import bike
 import time
 
-POWER = 150
+power = 150
 UPDATE_FRAME_COUNT = 10
 currentSpeed = 0 
 prevTime = 0
 lastTime = None
-
-nintaco.initRemoteAPI("localhost", 9999)
-api = nintaco.getAPI()
 
 def clamp(low,high,x):
     return min(max(x,low),high)
@@ -45,12 +42,10 @@ def getWeight():
 
 def update():
     global lastTime,currentSpeed
-    setHeart(121)
-    setCadence(67)
-    setPower(POWER)
+    setPower(power)
     t = time.time()
     if lastTime is not None:
-        currentSpeed = bike.updateSpeedMPH(getGrade(),getWind(),getWeight(),POWER,currentSpeed,t-lastTime)
+        currentSpeed = bike.updateSpeedMPH(getGrade(),getWind(),getWeight(),power,currentSpeed,t-lastTime)
         setSpeed(currentSpeed)
     lastTime = t
     
@@ -61,9 +56,9 @@ def reset():
     api.setRacerMateData(0,nintaco.RacerMateRemoteControl,1)
     currentSpeed = 0
     setSpeed(currentSpeed)
-    setCadence(67)
-    setHeart(121)
-    setPower(POWER)
+    setPower(power)
+    setHeart(0)
+    setCadence(0)
     api.setRacerMateData(0,nintaco.RacerMateNewRace,0)
     lastTime = None
     update()    
@@ -84,8 +79,20 @@ def Frame():
 def Start():
     print("Connected")
     reset()
-                
-api.addActivateListener(Start)
-api.addFrameListener(Frame)
 
-api.run()
+def racerMateInit():
+    global api
+    nintaco.initRemoteAPI("localhost", 9999)
+    api = nintaco.getAPI()
+    
+def racerMateGo():
+    api.addActivateListener(Start)
+    api.addFrameListener(Frame)
+
+    api.run()
+    print("exit run")
+
+if __name__ == '__main__':
+    racerMateInit()
+    racerMateGo()
+    
