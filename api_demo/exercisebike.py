@@ -4,6 +4,7 @@ import logging
 import math
 import threading
 import racermatefast
+import time
 
 from bleak import BleakClient,BleakScanner
 import bleak.backends.winrt.client
@@ -41,7 +42,6 @@ def bike_handler(sender,data):
     try:
         flags = struct.unpack("H",data[:2])[0]
         parsed = parseData(flags^BIKE_REVERSE_FLAG_BITS,data[2:],BIKE_DATA_FIELDS)
-        print(parsed)
         if "cadence" in parsed:
             racermatefast.setCadence(struct.unpack("H",parsed["cadence"])[0])
         if "power" in parsed:
