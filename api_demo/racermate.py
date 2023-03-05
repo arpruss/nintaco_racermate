@@ -83,7 +83,7 @@ def reset():
 def Frame():
     global frameCount,currentSpeed
     frameCount += 1
-    if frameCount % 60 == 0:
+    if frameCount % 600 == 0:
         print("fps",frameCount/(time.time()-startTime))
         print("speed",currentSpeed)
     if api.getRacerMateData(0, nintaco.RacerMateNewRace):

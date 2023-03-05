@@ -13,6 +13,8 @@ from bleak.backends.service import BleakGATTServiceCollection
 
 logging.basicConfig(level=logging.DEBUG)
 
+MY_ADDRESS = "24:0A:C4:59:5B:F2"
+
 def uuid16(n):
     return "0000%04X-0000-1000-8000-00805F9B34FB" % n
 
@@ -91,4 +93,7 @@ if __name__ == "__main__":
     t = threading.Thread(target=racermate.racerMateGo)
     t.start()
     loop = asyncio.get_event_loop()
-    loop.run_until_complete(scan(debug=True))
+    if MY_ADDRESS:
+        loop.run_until_complete(run(debug=True))
+    else:
+        loop.run_until_complete(scan(debug=True))
