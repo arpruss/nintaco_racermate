@@ -11,12 +11,18 @@ currentSpeed = 0
 prevTime = 0
 lastNonZeroPower = time.time()
 lastUpdateTime = None
+calculateSpeed = True
 toSet = {}
+
+def speedFromPower(v):
+    global calculateSpeed
+    calculateSpeed = v
 
 def clamp(low,high,x):
     return min(max(x,low),high)
 
 def setSpeed(v):
+    print("setSpeed",v)
     global currentSpeed
     s = math.floor(v*50+0.5)
     toSet[nintaco.RacerMateSpeed] = s
@@ -37,6 +43,7 @@ def applySettings():
     s = toSet.copy()
     toSet.clear()
     for k in s:
+        print(k,s[k])
         api.setRacerMateData(0, k, s[k])
 
 # percent
@@ -53,6 +60,8 @@ def getWeight():
 
 def update():
     global lastUpdateTime,currentSpeed,lastNonZeroPower
+    if not calculateSpeed:
+        return
     if power == 0:
         if time.time() - lastNonZeroPower > POWER_TIMEOUT:
             currentSpeed = 0

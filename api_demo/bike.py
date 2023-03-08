@@ -27,13 +27,23 @@ def updateSpeedMPH(_grade,_wind,_weight,power,_speed,dt):
     F_gravity = weight * math.sin(angle)
     F_rolling = weight * math.cos(angle) * ROLLING_RESISTANCE
     F_drag = 0.5 * DFA * (speed+headWind)**2
+    if speed+headWind < 0:
+        F_drag = -F_drag
     F_resist = F_gravity+F_rolling+F_drag
     P_wheel = power * (1-DRIVETRAIN_LOSS/100.)
-    if speed < 2:
-        F_forward = min(P_wheel/max(0.000001,speed),0.5*weight)
+    if speed < 1:
+        # hackish
+        F_forward = min(P_wheel/max(0.00001,speed),0.5*weight)
     else:
         F_forward = P_wheel / speed
-    speed = speed + (F_forward - F_resist) * dt / mass
+
+    # math.sqrt(2*P_wheel*dt/mass+speed*speed) would be the exact value with no F_resist and optimal gearing
+    if F_resist >= 0:
+        speed = min(math.sqrt(2*P_wheel*dt/mass+speed*speed), speed + (F_forward - F_resist) * dt / mass)
+    else:
+        speed += (F_forward - F_resist) * dt / mass
+        
+        
     return max(0, speed / MPH_TO_MS)
 
 # https://www.gribble.org/cycling/power_v_speed.html
