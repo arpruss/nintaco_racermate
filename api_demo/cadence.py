@@ -68,7 +68,7 @@ adapter.set_callback_on_scan_found(found)
 
 adapter.scan_start()
 while not peripheral:
-    time.sleep(0.2)
+    time.sleep(0.3)
 adapter.scan_stop()
 
 if peripheral is None:
