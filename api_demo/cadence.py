@@ -15,6 +15,8 @@ startTime = time.time()
 tt = []
 zz = []
 
+#log = open("log.txt","w")
+
 ACCEL_SERVICE = "b9590f4e-f0c4-46cc-8c4f-096fec764f91"
 GRAVITY_MEASUREMENT = "a0e83db5-08eb-44c2-a493-5e5f3dfce286"
 
@@ -26,6 +28,7 @@ def gravity(data):
     global lastCadence,tt,zz
     values = struct.unpack('fff', data)
     t = time.time() - startTime
+    #log.write("%g %g %g %g" % (t,values[0],values[1],values[2]))
     tt.append(t*1000)
     zz.append(values[2])
     if lastCadence + CADENCE_SPACING <= t:
@@ -39,6 +42,7 @@ def gravity(data):
             peak_times, peak_values = sm.peak.find_peaks(tt, zz, peak_type='valley', min_val=0.6, min_dist=10, plot=False)
             try:
                 cadence = sm.gait.cadence(np.array(tt), peak_times)
+                #print("cad:",cadence)
                 speed = ROTATION_METERS*GEAR_RATIO*cadence*60/1609.344
             except:
                 speed = 0
