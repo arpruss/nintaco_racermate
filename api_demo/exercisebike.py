@@ -45,7 +45,7 @@ def bike_handler(sender,data):
         flags = struct.unpack("H",data[:2])[0]
         parsed = parseData(flags^BIKE_REVERSE_FLAG_BITS,data[2:],BIKE_DATA_FIELDS)
         if "cadence" in parsed:
-            racermate.setCadence(struct.unpack("H",parsed["cadence"])[0])
+            racermate.setCadence(struct.unpack("H",parsed["cadence"])[0] // 2)
         if "power" in parsed:
             racermate.setPower(struct.unpack("H",parsed["power"])[0])
         if "heartRate" in parsed:
