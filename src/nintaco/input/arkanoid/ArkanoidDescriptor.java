@@ -5,15 +5,24 @@ import nintaco.input.*;
 import static net.java.games.input.Component.Identifier.Button.*;
 
 public class ArkanoidDescriptor extends DeviceDescriptor {
+  public static final float ARCADE_SPINNER_SCALE = 4.5f;
   
   public static final int Fire = 0;
   
   public static final int RewindTime = 1;
-  
+
   private static final Component.Identifier.Button[] DEFAULTS = { LEFT, RIGHT };
+
+  private int position = 0x7F;
+
+  private boolean arcadeSpinner = false;
   
   public ArkanoidDescriptor() {
     super(InputDevices.Arkanoid);
+  }
+
+  public void setArcadeSpinner(boolean arcadeSpinner) {
+    this.arcadeSpinner = arcadeSpinner;
   }
 
   @Override
@@ -55,15 +64,28 @@ public class ArkanoidDescriptor extends DeviceDescriptor {
     
     updateRewindTime(pressedValues[RewindTime] != 0, portIndex);
     
-    final int mouseCoordinates = InputUtil.getMouseCoordinates();
+    final int mouseCoordinates;
+
+    if (arcadeSpinner) {
+        final int dx = (int)(InputUtil.getMouseDeltaX()/ARCADE_SPINNER_SCALE);
+        position += dx;
+        if (position < 0)
+            position = 0;
+        if (position > 240)
+            position = 240;
+        mouseCoordinates = position;
+    }
+    else {
+        mouseCoordinates = InputUtil.getMouseCoordinates();
+    }
     
     int buttons = 0;
     if (mouseCoordinates != 0xFFFF && pressedValues[Fire] != 0) {
       buttons |= 0x04;
     }
-    
+
     return bits 
-        | (InputUtil.getMouseCoordinates() << 16) 
+        | (mouseCoordinates << 16) 
         | (portIndex == 0 ? buttons : (buttons << 8));    
   }  
 }

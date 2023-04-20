@@ -55,6 +55,7 @@
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="disableKeyboardRewindTimeCheckBox" min="-2" max="-2" attributes="0"/>
+                          <Component id="arcadeSpinnerCheckBox" min="-2" max="-2" attributes="0"/>
                           <Component id="exchangeGlassesCheckBox" min="-2" max="-2" attributes="0"/>
                           <Component id="hideFullscreenMouseCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="hideInactiveMouseCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -95,6 +96,8 @@
               <Component id="exchangeGlassesCheckBox" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="disableKeyboardRewindTimeCheckBox" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="arcadeSpinnerCheckBox" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="zapperLightDetectionMarginLabel" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -236,6 +239,12 @@
     <Component class="javax.swing.JCheckBox" name="disableKeyboardRewindTimeCheckBox">
       <Properties>
         <Property name="text" type="java.lang.String" value="Disable Rewind Time and High-speed for Keyboard devices"/>
+        <Property name="focusPainted" type="boolean" value="false"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="arcadeSpinnerCheckBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Use Arcade Spinner for Arkanoid Controller"/>
         <Property name="focusPainted" type="boolean" value="false"/>
       </Properties>
     </Component>

@@ -54,6 +54,8 @@ public class InputSettingsDialog extends javax.swing.JDialog {
     exchangeGlassesCheckBox.setSelected(inputs.isExchangeGlasses());
     disableKeyboardRewindTimeCheckBox.setSelected(inputs
         .isDisableKeyboardRewindTime());
+    arcadeSpinnerCheckBox.setSelected(inputs
+        .isArcadeSpinner());
     zapperLightDetectionMarginSpinner.setValue(inputs
         .getZapperLightDetectionMargin());
     
@@ -95,6 +97,7 @@ public class InputSettingsDialog extends javax.swing.JDialog {
     autofireResetButton = new javax.swing.JButton();
     exchangeGlassesCheckBox = new javax.swing.JCheckBox();
     disableKeyboardRewindTimeCheckBox = new javax.swing.JCheckBox();
+    arcadeSpinnerCheckBox = new javax.swing.JCheckBox();
     highSpeedPanel = new javax.swing.JPanel();
     highSpeed200RadioButton = new javax.swing.JRadioButton();
     highSpeed300RadioButton = new javax.swing.JRadioButton();
@@ -195,6 +198,9 @@ public class InputSettingsDialog extends javax.swing.JDialog {
     disableKeyboardRewindTimeCheckBox.setText("Disable Rewind Time and High-speed for Keyboard devices");
     disableKeyboardRewindTimeCheckBox.setFocusPainted(false);
 
+    arcadeSpinnerCheckBox.setText("Use Arcade Spinner as Arkanoid Controller");
+    arcadeSpinnerCheckBox.setFocusPainted(false);
+
     highSpeedPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("High-speed Rate"));
 
     speedUpButtonGroup.add(highSpeed200RadioButton);
@@ -280,6 +286,7 @@ public class InputSettingsDialog extends javax.swing.JDialog {
           .addGroup(layout.createSequentialGroup()
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
               .addComponent(disableKeyboardRewindTimeCheckBox)
+              .addComponent(arcadeSpinnerCheckBox)
               .addComponent(exchangeGlassesCheckBox)
               .addComponent(hideFullscreenMouseCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
               .addComponent(hideInactiveMouseCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -317,6 +324,8 @@ public class InputSettingsDialog extends javax.swing.JDialog {
         .addComponent(exchangeGlassesCheckBox)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
         .addComponent(disableKeyboardRewindTimeCheckBox)
+        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+        .addComponent(arcadeSpinnerCheckBox)
         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
           .addComponent(zapperLightDetectionMarginLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -348,6 +357,8 @@ public class InputSettingsDialog extends javax.swing.JDialog {
     inputs.setExchangeGlasses(exchangeGlassesCheckBox.isSelected()); 
     inputs.setDisableKeyboardRewindTime(disableKeyboardRewindTimeCheckBox
         .isSelected());
+    inputs.setArcadeSpinner(arcadeSpinnerCheckBox
+        .isSelected());
     inputs.setZapperLightDetectionMargin((int)zapperLightDetectionMarginSpinner
         .getValue());
         
@@ -378,6 +389,7 @@ public class InputSettingsDialog extends javax.swing.JDialog {
   private javax.swing.JButton cancelButton;
   private javax.swing.JCheckBox crosshairsCheckBox;
   private javax.swing.JCheckBox disableKeyboardRewindTimeCheckBox;
+  private javax.swing.JCheckBox arcadeSpinnerCheckBox;
   private javax.swing.JCheckBox exchangeGlassesCheckBox;
   private javax.swing.JCheckBox hideCursorCheckBox;
   private javax.swing.JCheckBox hideFullscreenMouseCheckBox;
