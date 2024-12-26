@@ -11,7 +11,6 @@ import nintaco.input.other.*;
 import nintaco.preferences.*;
 import static nintaco.input.ConsoleType.*;
 import static nintaco.input.InputDevices.*;
-import nintaco.input.arkanoid.ArkanoidDescriptor;
 import static nintaco.input.Ports.*;
 
 public class Inputs implements Serializable {
@@ -30,7 +29,6 @@ public class Inputs implements Serializable {
   private Boolean hideFullscreenMouse;
   private Boolean exchangeGlasses;
   private Boolean disableKeyboardRewindTime;
-  private Boolean arcadeSpinner;
   private Integer zapperLightDetectionMargin;
   
   public Inputs() { 
@@ -207,22 +205,6 @@ public class Inputs implements Serializable {
       final boolean disableKeyboardRewindTime) {
     synchronized(AppPrefs.class) {
       this.disableKeyboardRewindTime = disableKeyboardRewindTime;
-    }
-  }
-
-  public boolean isArcadeSpinner() {
-    synchronized(AppPrefs.class) {  
-      if (arcadeSpinner == null) {
-        arcadeSpinner = false;
-      }
-      return arcadeSpinner;
-    }
-  }
-
-  public void setArcadeSpinner(
-      final boolean arcadeSpinner) {
-    synchronized(AppPrefs.class) {
-      this.arcadeSpinner = arcadeSpinner;
     }
   }
 
@@ -507,7 +489,6 @@ public class Inputs implements Serializable {
         glassesFrame.setExchange(isExchangeGlasses());
       }
       PPU.setZapperLightDetectionMargin(getZapperLightDetectionMargin());
-      ((ArkanoidDescriptor)DeviceDescriptor.getDescriptor(InputDevices.Arkanoid)).setArcadeSpinner(isArcadeSpinner());
     }
   }  
 }

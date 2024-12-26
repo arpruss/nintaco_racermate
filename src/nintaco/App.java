@@ -163,10 +163,15 @@ public final class App {
     PPU.init();
     APU.init();
     AppPrefs.getInstance().getInputs().apply();
+	
+	boolean programServer = false;
     
     for(int i = 0; i < args.length; ++i) {
       final String arg = args[i];
-      if (!arg.startsWith("-")) {
+	  if (arg.equals("-p")) {
+		  programServer = true;
+	  }
+	  else if (!arg.startsWith("-")) {
         final StringBuilder sb = new StringBuilder(arg);
         for(++i; i < args.length; ++i) {
           sb.append(' ').append(args[i]);
@@ -175,6 +180,9 @@ public final class App {
         break;
       }
     }
+	
+	if (programServer)
+		startProgramServer();
   }
   
   public static void setAppMode(final AppMode appMode) {

@@ -5,6 +5,7 @@ import math
 import threading
 import racermate
 import time
+import sys
 
 from bleak import BleakClient,BleakScanner
 import bleak.backends.winrt.client
@@ -54,6 +55,10 @@ def bike_handler(sender,data):
         pass
 
 async def run(address, debug=False):
+    if address is None:
+        while True:
+            await asyncio.sleep(1)
+
     async with BleakClient(address) as client:
         logging.info("connecting")
         connected = await client.is_connected()
@@ -87,13 +92,22 @@ async def scan(debug=False):
 
 if __name__ == "__main__":
     racermate.racerMateInit()
-    racermate.setPower(0)
-    racermate.setCadence(0)
-    racermate.setHeart(0)
-    t = threading.Thread(target=racermate.racerMateGo)
-    t.start()
-    loop = asyncio.get_event_loop()
-    if MY_ADDRESS:
-        loop.run_until_complete(run(debug=True))
+    if len(sys.argv)>1 and sys.argv[1][0] == 'd':
+        racermate.setPower(200)
+        racermate.setCadence(60)
+        racermate.setHeart(100)
+        t = threading.Thread(target=racermate.racerMateGo)
+        t.start()
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(run(None,debug=True))
     else:
-        loop.run_until_complete(scan(debug=True))
+        racermate.setPower(0)
+        racermate.setCadence(0)
+        racermate.setHeart(0)
+        t = threading.Thread(target=racermate.racerMateGo)
+        t.start()
+        loop = asyncio.get_event_loop()
+        if MY_ADDRESS:
+            loop.run_until_complete(run(MY_ADDRESS,debug=True))
+        else:
+            loop.run_until_complete(scan(debug=True))

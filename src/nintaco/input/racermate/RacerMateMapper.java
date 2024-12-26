@@ -74,7 +74,6 @@ public class RacerMateMapper extends DeviceMapper implements Serializable {
   } 
   
   private void write(final int index, int data) {
-    
     switch(index) {
       case 1: // Grade x 10 (-49 to 150)
       case 2: // Wind (-99 to 99)
@@ -95,7 +94,8 @@ public class RacerMateMapper extends DeviceMapper implements Serializable {
         data -= 0x800;
         break;
       case 15: // New race
-        newRace = true;
+        if (data == 0x0001)
+            newRace = true;
         break;
     }
   }

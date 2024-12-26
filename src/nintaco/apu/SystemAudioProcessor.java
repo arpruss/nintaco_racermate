@@ -214,7 +214,7 @@ public class SystemAudioProcessor implements AudioProcessor {
     try {
       final FloatControl masterGain = masterGainControl;
       if (masterGain != null) {
-        masterGain.setValue((float)clamp(20.0 * log10(volume / 100.0), 
+        masterGain.setValue(Math.clamp((float)(20.0 * log10(volume / 100.0)), 
             masterGain.getMinimum(), masterGain.getMaximum()));
       }
     } catch(final Throwable t) {      
